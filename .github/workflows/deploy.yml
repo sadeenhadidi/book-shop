@@ -18,30 +18,22 @@ jobs:
           echo "Current directory structure:"
           pwd
           ls -la
-          echo "Checking for src directory:"
-          if [ -d "src" ]; then
-            echo "src directory exists - contents:"
-            ls -la src/
+          echo "Checking for book-shop directory:"
+          if [ -d "book-shop" ]; then
+            echo "book-shop directory exists - contents:"
+            ls -la book-shop/
           else
-            echo "src directory NOT found"
+            echo "book-shop directory NOT found"
             echo "Available directories:"
             find . -type d -name "*" | head -10
+            exit 1
           fi
 
       - name: Build Docker image
         run: |
-          # تحقق من وجود Dockerfile في المكان الصحيح
-          if [ -f "Dockerfile" ]; then
-            echo "Building from root directory"
-            docker build -t myapp:latest .
-          elif [ -f "src/Dockerfile" ]; then
-            echo "Building from src directory"
-            docker build -t myapp:latest ./src
-          else
-            echo "ERROR: Dockerfile not found!"
-            find . -name "Dockerfile" -type f
-            exit 1
-          fi
+          # البناء من مجلد book-shop
+          echo "Building from book-shop directory"
+          docker build -t myapp:latest ./book-shop
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
